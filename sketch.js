@@ -4,6 +4,7 @@ const Bodies = Matter.Bodies;
 const Constraint = Matter.Constraint;
 var engine, world;
 var canvas, base1, base2, archer;
+var stickman1, stickman2;
 var arrows1 = [];
 var arrows2 = [];
 var archer1Life = 3;
@@ -11,13 +12,19 @@ var archer2Life = 3;
 
 function setup() {
   canvas = createCanvas(windowWidth, windowHeight);
+
   engine = Engine.create();
   world = engine.world;
 
   base1 = new Base1(300, random(300, height - 300), 140, 25);
   base2 = new Base2(width - 300, random(300, height - 300), 140, 25);
-  archer1 = new Archer1(300, base1.body.position.y - 150, 120, 40);
-  archer2 = new Archer2(width - 300, base2.body.position.y - 150, 120, 40);
+
+  archer1 = new Archer1(306, base1.body.position.y - 80, 120, 40);
+  archer2 = new Archer2(width - 305, base2.body.position.y - 80, 120, 40);
+
+  stickman1 = new Stickman1(280, base1.body.position.y - 73, 50, 120);
+  stickman2 = new Stickman2(width - 280, base2.body.position.y - 73, 50, 120);
+
   moveArcher2();
 }
 
@@ -33,6 +40,7 @@ function draw() {
 
   base1.display();
   base2.display();
+
   for (var i = 0; i < arrows1.length; i++) {
     showArrows(i, arrows1);
   }
@@ -40,6 +48,9 @@ function draw() {
   for (var i = 0; i < arrows2.length; i++) {
     showArrows(i, arrows2);
   }
+
+  stickman1.display();
+  stickman2.display();
 
   archer1.display();
   archer2.display();
@@ -97,7 +108,7 @@ function keyPressed() {
       archer1.body.position.x,
       archer1.body.position.y,
       100,
-      50
+      10
     );
     arrow.trajectory = [];
     Matter.Body.setAngle(arrow.body, archer1.body.angle);
@@ -143,7 +154,7 @@ function moveArcher2() {
       }
       angle += angleValue;
 
-      var arrow = new Arrow(pos.x, pos.y, 100, 50);
+      var arrow = new Arrow(pos.x, pos.y, 100, 10);
       arrow.trajectory = [];
 
       Matter.Body.setAngle(archer2.body, angle);

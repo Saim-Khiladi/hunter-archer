@@ -36,7 +36,7 @@ class Arrow {
     translate(pos.x, pos.y);
     rotate(angle);
     imageMode(CENTER);
-    image(this.image, 50, 0, this.width, this.height);
+    image(this.image, 0, 0, this.width, this.height);
     pop();
 
     if (this.body.velocity.x > 0 && this.body.position.x > 400) {
