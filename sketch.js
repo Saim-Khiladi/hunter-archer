@@ -2,12 +2,19 @@ const Engine = Matter.Engine;
 const World = Matter.World;
 const Bodies = Matter.Bodies;
 const Constraint = Matter.Constraint;
+
 var engine, world;
-var canvas, base1, base2, archer1, archer2, stickman1, stickman2;
-var arrows1 = [];
-var arrows2 = [];
-var archer1Life = 3;
-var archer2Life = 3;
+var canvas;
+var palyer, playerBase, playerArcher;
+var computer, computerBase, computerArcher;
+var playerArrows = [];
+var computerArrows = [];
+var playerArcherLife = 3;
+var computerArcherLife = 3;
+
+function preload() {
+  backgroundImg = loadImage("./assets/background.gif");
+}
 
 function setup() {
   canvas = createCanvas(windowWidth, windowHeight);
@@ -15,132 +22,172 @@ function setup() {
   engine = Engine.create();
   world = engine.world;
 
-  base1 = new Base1(300, random(300, height - 300), 140, 25);
-  archer1 = new Archer1(306, base1.body.position.y - 80, 20, 120);
+  playerBase = new PlayerBase(300, random(450, height - 300), 180, 150);
+  player = new Player(285, playerBase.body.position.y - 153, 50, 180);
+  playerArcher = new PlayerArcher(
+    310,
+    playerBase.body.position.y - 150,
+    50,
+    120
+  );
 
-  base2 = new Base2(width - 300, random(300, height - 300), 140, 25);
-  archer2 = new Archer2(width - 305, base2.body.position.y - 80, 20, 120);
+  computerBase = new ComputerBase(
+    width - 300,
+    random(450, height - 300),
+    180,
+    150
+  );
+  computer = new Computer(
+    width - 280,
+    computerBase.body.position.y - 153,
+    50,
+    180
+  );
 
-  stickman1 = new Stickman1(280, base1.body.position.y - 73, 50, 120);
-  stickman2 = new Stickman2(width - 280, base2.body.position.y - 73, 50, 120);
-  moveArcher2();
+  computerArcher = new ComputerArcher(
+    width - 325,
+    computerBase.body.position.y - 200,
+    50,
+    120
+  );
+  handleComputerArcher();
 }
 
 function draw() {
-  background(189);
+  background(backgroundImg);
+
   Engine.update(engine);
 
-  base1.display();
-  archer1.display();
+  // Title
+  fill("#FFFF");
+  textAlign("center");
+  textSize(40);
+  text("HUNTER ARCHER", width / 2, 100);
 
-  base2.display();
-  archer2.display();
-
-  stickman1.display();
-  stickman2.display();
-
-  for (var i = 0; i < arrows1.length; i++) {
-    showArrows(i, arrows1);
+  for (var i = 0; i < playerArrows.length; i++) {
+    showArrows(i, playerArrows);
   }
+  playerBase.display();
+  player.display();
+  player.life();
+  playerArcher.display();
 
-  for (var i = 0; i < arrows2.length; i++) {
-    showArrows(i, arrows2);
-  }
-
-  for (var i = 0; i < arrows1.length; i++) {
-    var collision = Matter.SAT.collides(arrows1[i].body, base2.body);
+  for (var i = 0; i < playerArrows.length; i++) {
+    var collision = Matter.SAT.collides(
+      playerArrows[i].body,
+      computerBase.body
+    );
     if (collision.collided) {
-      archer2Life -= 1;
-      base2.reduceLife(archer2Life);
-      if (archer2Life <= 0) {
-        archer2.collapse = true;
-        Matter.Body.setStatic(archer2.body, false);
-        Matter.Body.setStatic(stickman2.body, false);
-        Matter.Body.setPosition(stickman2.body, {
+      computerArcherLife -= 1;
+      computer.reduceLife(computerArcherLife);
+      if (computerArcherLife <= 0) {
+        computerArcher.collapse = true;
+        Matter.Body.setStatic(computerArcher.body, false);
+        Matter.Body.setStatic(computer.body, false);
+        Matter.Body.setPosition(computer.body, {
           x: width - 100,
-          y: stickman2.body.position.y
+          y: computer.body.position.y
         });
       }
     }
   }
 
-  for (var i = 0; i < arrows1.length; i++) {
-    var collision = Matter.SAT.collides(arrows1[i].body, archer2.body);
+  for (var i = 0; i < playerArrows.length; i++) {
+    var collision = Matter.SAT.collides(
+      playerArrows[i].body,
+      computerArcher.body
+    );
     if (collision.collided) {
-      archer2Life -= 1;
-      base2.reduceLife(archer2Life);
-      if (archer2Life <= 0) {
-        archer2.collapse = true;
-        Matter.Body.setStatic(archer2.body, false);
-        Matter.Body.setStatic(stickman2.body, false);
-        Matter.Body.setPosition(stickman2.body, {
+      computerArcherLife -= 1;
+      computer.reduceLife(computerArcherLife);
+      if (computerArcherLife <= 0) {
+        computerArcher.collapse = true;
+        Matter.Body.setStatic(computerArcher.body, false);
+        Matter.Body.setStatic(computer.body, false);
+        Matter.Body.setPosition(computer.body, {
           x: width - 100,
-          y: stickman2.body.position.y
+          y: computer.body.position.y
         });
       }
     }
   }
 
-  for (var i = 0; i < arrows1.length; i++) {
-    var collision = Matter.SAT.collides(arrows1[i].body, stickman2.body);
+  for (var i = 0; i < playerArrows.length; i++) {
+    var collision = Matter.SAT.collides(playerArrows[i].body, computer.body);
     if (collision.collided) {
-      archer2Life -= 1;
-      base2.reduceLife(archer2Life);
-      if (archer2Life <= 0) {
-        archer2.collapse = true;
-        Matter.Body.setStatic(archer2.body, false);
-        Matter.Body.setStatic(stickman2.body, false);
-        Matter.Body.setPosition(stickman2.body, {
+      computerArcherLife -= 1;
+      computer.reduceLife(computerArcherLife);
+      if (computerArcherLife <= 0) {
+        computerArcher.collapse = true;
+        Matter.Body.setStatic(computerArcher.body, false);
+        Matter.Body.setStatic(computer.body, false);
+        Matter.Body.setPosition(computer.body, {
           x: width - 100,
-          y: stickman2.body.position.y
+          y: computer.body.position.y
         });
       }
     }
   }
 
-  for (var i = 0; i < arrows2.length; i++) {
-    var collision = Matter.SAT.collides(arrows2[i].body, base1.body);
+  for (var i = 0; i < computerArrows.length; i++) {
+    showArrows(i, computerArrows);
+  }
+  computerBase.display();
+  computer.display();
+  computer.life();
+  computerArcher.display();
+  for (var i = 0; i < computerArrows.length; i++) {
+    var collision = Matter.SAT.collides(
+      computerArrows[i].body,
+      playerBase.body
+    );
     if (collision.collided) {
-      archer1Life -= 1;
-      base1.reduceLife(archer1Life);
-      if (archer1Life <= 0) {
-        Matter.Body.setStatic(archer1.body, false);
-        Matter.Body.setStatic(stickman1.body, false);
-        Matter.Body.setPosition(stickman1.body, {
+      playerArcherLife -= 1;
+      player.reduceLife(playerArcherLife);
+      if (playerArcherLife <= 0) {
+        playerArcher.collapse = true;
+        Matter.Body.setStatic(playerArcher.body, false);
+        Matter.Body.setStatic(player.body, false);
+        Matter.Body.setPosition(player.body, {
           x: 100,
-          y: stickman1.body.position.y
+          y: player.body.position.y
         });
       }
     }
   }
 
-  for (var i = 0; i < arrows2.length; i++) {
-    var collision = Matter.SAT.collides(arrows2[i].body, archer1.body);
+  for (var i = 0; i < computerArrows.length; i++) {
+    var collision = Matter.SAT.collides(
+      computerArrows[i].body,
+      playerArcher.body
+    );
     if (collision.collided) {
-      archer1Life -= 1;
-      base1.reduceLife(archer1Life);
-      if (archer1Life <= 0) {
-        Matter.Body.setStatic(archer1.body, false);
-        Matter.Body.setStatic(stickman1.body, false);
-        Matter.Body.setPosition(stickman1.body, {
+      playerArcherLife -= 1;
+      player.reduceLife(playerArcherLife);
+      if (playerArcherLife <= 0) {
+        playerArcher.collapse = true;
+        Matter.Body.setStatic(playerArcher.body, false);
+        Matter.Body.setStatic(player.body, false);
+        Matter.Body.setPosition(player.body, {
           x: 100,
-          y: stickman1.body.position.y
+          y: player.body.position.y
         });
       }
     }
   }
 
-  for (var i = 0; i < arrows2.length; i++) {
-    var collision = Matter.SAT.collides(arrows2[i].body, stickman1.body);
+  for (var i = 0; i < computerArrows.length; i++) {
+    var collision = Matter.SAT.collides(computerArrows[i].body, player.body);
     if (collision.collided) {
-      archer1Life -= 1;
-      base1.reduceLife(archer1Life);
-      if (archer1Life <= 0) {
-        Matter.Body.setStatic(archer1.body, false);
-        Matter.Body.setStatic(stickman1.body, false);
-        Matter.Body.setPosition(stickman1.body, {
+      playerArcherLife -= 1;
+      player.reduceLife(playerArcherLife);
+      if (playerArcherLife <= 0) {
+        playerArcher.collapse = true;
+        Matter.Body.setStatic(playerArcher.body, false);
+        Matter.Body.setStatic(player.body, false);
+        Matter.Body.setPosition(player.body, {
           x: 100,
-          y: stickman1.body.position.y
+          y: player.body.position.y
         });
       }
     }
@@ -149,46 +196,46 @@ function draw() {
 
 function keyPressed() {
   if (keyCode === DOWN_ARROW) {
-    var arrow = new Arrow(
-      archer1.body.position.x,
-      archer1.body.position.y,
-      100,
-      10,
-      archer1.body.angle
-    );
+    var posX = playerArcher.body.position.x;
+    var posY = playerArcher.body.position.y;
+    var angle = playerArcher.body.angle;
+
+    var arrow = new PlayerArrow(posX, posY, 100, 10, angle);
+
     arrow.trajectory = [];
-    Matter.Body.setAngle(arrow.body, archer1.body.angle);
-    arrows1.push(arrow);
+    Matter.Body.setAngle(arrow.body, angle);
+    playerArrows.push(arrow);
   }
 }
 
 function keyReleased() {
   if (keyCode === DOWN_ARROW) {
-    if (arrows1.length) {
-      arrows1[arrows1.length - 1].shoot(archer1.body.angle);
+    if (playerArrows.length) {
+      var angle = playerArcher.body.angle;
+      playerArrows[playerArrows.length - 1].shoot(angle);
     }
   }
 }
 
-function showArrows(index, arrowList) {
-  arrowList[index].display();
+function showArrows(index, arrows) {
+  arrows[index].display();
   if (
-    arrowList[index].body.position.x > width ||
-    arrowList[index].body.position.y > height
+    arrows[index].body.position.x > width ||
+    arrows[index].body.position.y > height
   ) {
-    if (!arrowList[index].isRemoved) {
-      arrowList[index].remove(index, arrowList);
+    if (!arrows[index].isRemoved) {
+      arrows[index].remove(index, arrows);
     } else {
-      arrowList[index].trajectory = [];
+      arrows[index].trajectory = [];
     }
   }
 }
 
-function moveArcher2() {
-  if (!archer2.collapse) {
+function handleComputerArcher() {
+  if (!computerArcher.collapse && !playerArcher.collapse) {
     setTimeout(() => {
-      var pos = archer2.body.position;
-      var angle = archer2.body.angle;
+      var pos = computerArcher.body.position;
+      var angle = computerArcher.body.angle;
       var moves = ["UP", "DOWN"];
       var move = random(moves);
       var angleValue;
@@ -200,18 +247,17 @@ function moveArcher2() {
       }
       angle += angleValue;
 
-      var arrow = new Arrow(pos.x, pos.y, 100, 10, archer2.body.angle);
-      arrow.trajectory = [];
+      var arrow = new ComputerArrow(pos.x, pos.y, 100, 10, angle);
 
-      Matter.Body.setAngle(archer2.body, angle);
-      Matter.Body.setAngle(arrow.body, angle);
+      Matter.Body.setAngle(computerArcher.body, angle);
+      Matter.Body.setAngle(computerArcher.body, angle);
 
-      arrows2.push(arrow);
+      computerArrows.push(arrow);
       setTimeout(() => {
-        arrows2[arrows2.length - 1].shoot(angle);
+        computerArrows[computerArrows.length - 1].shoot(angle);
       }, 100);
 
-      moveArcher2();
+      handleComputerArcher();
     }, 2000);
   }
 }
