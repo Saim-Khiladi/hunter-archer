@@ -67,54 +67,33 @@ function draw() {
   for (var i = 0; i < playerArrows.length; i++) {
     showArrows(i, playerArrows);
   }
+
   playerBase.display();
   player.display();
   player.life();
   playerArcher.display();
 
   for (var i = 0; i < playerArrows.length; i++) {
-    var collision = Matter.SAT.collides(
+    var baseCollision = Matter.SAT.collides(
       playerArrows[i].body,
       computerBase.body
     );
-    if (collision.collided) {
-      computerArcherLife -= 1;
-      computer.reduceLife(computerArcherLife);
-      if (computerArcherLife <= 0) {
-        computerArcher.collapse = true;
-        Matter.Body.setStatic(computerArcher.body, false);
-        Matter.Body.setStatic(computer.body, false);
-        Matter.Body.setPosition(computer.body, {
-          x: width - 100,
-          y: computer.body.position.y
-        });
-      }
-    }
-  }
 
-  for (var i = 0; i < playerArrows.length; i++) {
-    var collision = Matter.SAT.collides(
+    var archerCollision = Matter.SAT.collides(
       playerArrows[i].body,
       computerArcher.body
     );
-    if (collision.collided) {
-      computerArcherLife -= 1;
-      computer.reduceLife(computerArcherLife);
-      if (computerArcherLife <= 0) {
-        computerArcher.collapse = true;
-        Matter.Body.setStatic(computerArcher.body, false);
-        Matter.Body.setStatic(computer.body, false);
-        Matter.Body.setPosition(computer.body, {
-          x: width - 100,
-          y: computer.body.position.y
-        });
-      }
-    }
-  }
 
-  for (var i = 0; i < playerArrows.length; i++) {
-    var collision = Matter.SAT.collides(playerArrows[i].body, computer.body);
-    if (collision.collided) {
+    var computerCollision = Matter.SAT.collides(
+      playerArrows[i].body,
+      computer.body
+    );
+
+    if (
+      baseCollision.collided ||
+      archerCollision.collided ||
+      computerCollision.collided
+    ) {
       computerArcherLife -= 1;
       computer.reduceLife(computerArcherLife);
       if (computerArcherLife <= 0) {
@@ -132,53 +111,33 @@ function draw() {
   for (var i = 0; i < computerArrows.length; i++) {
     showArrows(i, computerArrows);
   }
+
   computerBase.display();
   computer.display();
   computer.life();
   computerArcher.display();
+
   for (var i = 0; i < computerArrows.length; i++) {
-    var collision = Matter.SAT.collides(
+    var baseCollision = Matter.SAT.collides(
       computerArrows[i].body,
       playerBase.body
     );
-    if (collision.collided) {
-      playerArcherLife -= 1;
-      player.reduceLife(playerArcherLife);
-      if (playerArcherLife <= 0) {
-        playerArcher.collapse = true;
-        Matter.Body.setStatic(playerArcher.body, false);
-        Matter.Body.setStatic(player.body, false);
-        Matter.Body.setPosition(player.body, {
-          x: 100,
-          y: player.body.position.y
-        });
-      }
-    }
-  }
 
-  for (var i = 0; i < computerArrows.length; i++) {
-    var collision = Matter.SAT.collides(
+    var archerCollision = Matter.SAT.collides(
       computerArrows[i].body,
       playerArcher.body
     );
-    if (collision.collided) {
-      playerArcherLife -= 1;
-      player.reduceLife(playerArcherLife);
-      if (playerArcherLife <= 0) {
-        playerArcher.collapse = true;
-        Matter.Body.setStatic(playerArcher.body, false);
-        Matter.Body.setStatic(player.body, false);
-        Matter.Body.setPosition(player.body, {
-          x: 100,
-          y: player.body.position.y
-        });
-      }
-    }
-  }
 
-  for (var i = 0; i < computerArrows.length; i++) {
-    var collision = Matter.SAT.collides(computerArrows[i].body, player.body);
-    if (collision.collided) {
+    var playerCollision = Matter.SAT.collides(
+      computerArrows[i].body,
+      player.body
+    );
+
+    if (
+      baseCollision.collided ||
+      archerCollision.collided ||
+      playerCollision.collided
+    ) {
       playerArcherLife -= 1;
       player.reduceLife(playerArcherLife);
       if (playerArcherLife <= 0) {
@@ -241,9 +200,9 @@ function handleComputerArcher() {
       var angleValue;
 
       if (move === "UP") {
-        angleValue = 0.2;
+        angleValue = 0.1;
       } else {
-        angleValue = -0.2;
+        angleValue = -0.1;
       }
       angle += angleValue;
 

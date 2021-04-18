@@ -24,7 +24,7 @@ class ComputerArrow {
 
   shoot(archerAngle) {
     this.velocity = p5.Vector.fromAngle(archerAngle + PI / 2);
-    this.velocity.mult(30);
+    this.velocity.mult(32);
     Matter.Body.setVelocity(this.body, {
       x: this.velocity.x,
       y: this.velocity.y
