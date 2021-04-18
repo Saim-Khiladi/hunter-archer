@@ -72,41 +72,7 @@ function draw() {
   player.display();
   player.life();
   playerArcher.display();
-
-  for (var i = 0; i < playerArrows.length; i++) {
-    var baseCollision = Matter.SAT.collides(
-      playerArrows[i].body,
-      computerBase.body
-    );
-
-    var archerCollision = Matter.SAT.collides(
-      playerArrows[i].body,
-      computerArcher.body
-    );
-
-    var computerCollision = Matter.SAT.collides(
-      playerArrows[i].body,
-      computer.body
-    );
-
-    if (
-      baseCollision.collided ||
-      archerCollision.collided ||
-      computerCollision.collided
-    ) {
-      computerArcherLife -= 1;
-      computer.reduceLife(computerArcherLife);
-      if (computerArcherLife <= 0) {
-        computerArcher.collapse = true;
-        Matter.Body.setStatic(computerArcher.body, false);
-        Matter.Body.setStatic(computer.body, false);
-        Matter.Body.setPosition(computer.body, {
-          x: width - 100,
-          y: computer.body.position.y
-        });
-      }
-    }
-  }
+  handlePlayerArrowCollision();
 
   for (var i = 0; i < computerArrows.length; i++) {
     showArrows(i, computerArrows);
@@ -116,41 +82,7 @@ function draw() {
   computer.display();
   computer.life();
   computerArcher.display();
-
-  for (var i = 0; i < computerArrows.length; i++) {
-    var baseCollision = Matter.SAT.collides(
-      computerArrows[i].body,
-      playerBase.body
-    );
-
-    var archerCollision = Matter.SAT.collides(
-      computerArrows[i].body,
-      playerArcher.body
-    );
-
-    var playerCollision = Matter.SAT.collides(
-      computerArrows[i].body,
-      player.body
-    );
-
-    if (
-      baseCollision.collided ||
-      archerCollision.collided ||
-      playerCollision.collided
-    ) {
-      playerArcherLife -= 1;
-      player.reduceLife(playerArcherLife);
-      if (playerArcherLife <= 0) {
-        playerArcher.collapse = true;
-        Matter.Body.setStatic(playerArcher.body, false);
-        Matter.Body.setStatic(player.body, false);
-        Matter.Body.setPosition(player.body, {
-          x: 100,
-          y: player.body.position.y
-        });
-      }
-    }
-  }
+  handleComputerArrowCollision();
 }
 
 function keyPressed() {
@@ -218,5 +150,79 @@ function handleComputerArcher() {
 
       handleComputerArcher();
     }, 2000);
+  }
+}
+
+function handlePlayerArrowCollision() {
+  for (var i = 0; i < playerArrows.length; i++) {
+    var baseCollision = Matter.SAT.collides(
+      playerArrows[i].body,
+      computerBase.body
+    );
+
+    var archerCollision = Matter.SAT.collides(
+      playerArrows[i].body,
+      computerArcher.body
+    );
+
+    var computerCollision = Matter.SAT.collides(
+      playerArrows[i].body,
+      computer.body
+    );
+
+    if (
+      baseCollision.collided ||
+      archerCollision.collided ||
+      computerCollision.collided
+    ) {
+      computerArcherLife -= 1;
+      computer.reduceLife(computerArcherLife);
+      if (computerArcherLife <= 0) {
+        computerArcher.collapse = true;
+        Matter.Body.setStatic(computerArcher.body, false);
+        Matter.Body.setStatic(computer.body, false);
+        Matter.Body.setPosition(computer.body, {
+          x: width - 100,
+          y: computer.body.position.y
+        });
+      }
+    }
+  }
+}
+
+function handleComputerArrowCollision() {
+  for (var i = 0; i < computerArrows.length; i++) {
+    var baseCollision = Matter.SAT.collides(
+      computerArrows[i].body,
+      playerBase.body
+    );
+
+    var archerCollision = Matter.SAT.collides(
+      computerArrows[i].body,
+      playerArcher.body
+    );
+
+    var playerCollision = Matter.SAT.collides(
+      computerArrows[i].body,
+      player.body
+    );
+
+    if (
+      baseCollision.collided ||
+      archerCollision.collided ||
+      playerCollision.collided
+    ) {
+      playerArcherLife -= 1;
+      player.reduceLife(playerArcherLife);
+      if (playerArcherLife <= 0) {
+        playerArcher.collapse = true;
+        Matter.Body.setStatic(playerArcher.body, false);
+        Matter.Body.setStatic(player.body, false);
+        Matter.Body.setPosition(player.body, {
+          x: 100,
+          y: player.body.position.y
+        });
+      }
+    }
   }
 }
