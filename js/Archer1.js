@@ -8,7 +8,7 @@ class Archer1 {
     this.y = y;
     this.width = width;
     this.height = height;
-    Matter.Body.setAngle(this.body, radians(-90));
+    Matter.Body.setAngle(this.body, -PI / 2);
     World.add(world, this.body);
   }
   display() {
@@ -24,21 +24,21 @@ class Archer1 {
       Matter.Body.setAngle(this.body, angle);
     }
 
-    // if (this.body.isStatic) {
-    push();
-    translate(pos.x, pos.y);
-    rotate(angle);
-    fill("white");
-    rect(0, -20, this.width, this.height);
-    pop();
-    // } else {
-    //   push();
-    //   translate(pos.x, pos.y);
-    //   rotate(angle);
-    //   rectMode(CENTER);
-    //   fill("#676e6a");
-    //   rect(0, 0, this.width, this.height);
-    //   pop();
-    // }
+    if (this.body.isStatic) {
+      push();
+      translate(pos.x, pos.y);
+      rotate(angle);
+      fill("white");
+      rect(0, 0, this.width, this.height);
+      pop();
+    } else {
+      push();
+      translate(pos.x, pos.y);
+      rotate(angle);
+      rectMode(CENTER);
+      fill("#676e6a");
+      rect(0, 0, this.width, this.height);
+      pop();
+    }
   }
 }

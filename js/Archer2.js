@@ -9,7 +9,7 @@ class Archer2 {
     this.width = width;
     this.height = height;
     World.add(world, this.body);
-    Matter.Body.setAngle(this.body, PI);
+    Matter.Body.setAngle(this.body, PI / 2);
     this.collapse = false;
   }
 

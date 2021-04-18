@@ -12,7 +12,8 @@ class Arrow {
     this.image = loadImage("./assets/arrow.png");
     this.trajectory = [];
     this.isRemoved = false;
-    this.velocity = p5.Vector.fromAngle(archerAngle + PI / 2);
+    this.archerAngle = archerAngle;
+    this.velocity = p5.Vector.fromAngle(archerAngle);
     World.add(world, this.body);
   }
 
@@ -23,26 +24,34 @@ class Arrow {
   }
 
   shoot(archerAngle) {
-    this.velocity.mult(25);
+    this.velocity = p5.Vector.fromAngle(archerAngle + PI / 2);
+    this.velocity.mult(30);
     Matter.Body.setVelocity(this.body, {
       x: this.velocity.x,
       y: this.velocity.y
     });
+
     Matter.Body.setStatic(this.body, false);
   }
 
   display() {
+    var tmpAngle;
+    if (this.body.velocity.y === 0) {
+      tmpAngle = this.archerAngle + PI / 2;
+    } else {
+      tmpAngle = Math.atan(this.body.velocity.y / this.body.velocity.x);
+    }
+
+    Matter.Body.setAngle(this.body, tmpAngle);
+
     var pos = this.body.position;
     var angle = this.body.angle;
 
-    // console.log(angle);
     push();
     translate(pos.x, pos.y);
-    angle = this.velocity.heading();
     rotate(angle);
     imageMode(CENTER);
-    // rect(0, 0, this.width, this.height);
-    image(this.image, 0, 0, this.width, this.height);
+    image(this.image, 0, -10, this.width, this.height);
     pop();
 
     if (this.body.velocity.x > 0 && this.body.position.x > 400) {
@@ -52,7 +61,7 @@ class Arrow {
 
     for (var i = 0; i < this.trajectory.length; i++) {
       fill("black");
-      ellipse(this.trajectory[i][0], this.trajectory[i][1], 2, 2);
+      ellipse(this.trajectory[i][0], this.trajectory[i][1] - 10, 2, 2);
     }
   }
 }

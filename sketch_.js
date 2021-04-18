@@ -165,8 +165,8 @@ function keyPressed() {
       10
     );
     arrow.trajectory = [];
-    // console.log(archer1.body.angle);
-    Matter.Body.setAngle(arrow.body, abs(2 * PI + archer1.body.angle));
+
+    Matter.Body.setAngle(arrow.body, 2 * PI + archer1.body.angle);
     arrows1.push(arrow);
   }
 }
