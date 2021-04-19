@@ -8,8 +8,7 @@ class PlayerArcher {
     this.width = width;
     this.height = height;
     this.collapse = false;
-    this.image1 = loadImage("./assets/playerArcher.png");
-    this.image2 = loadImage("./assets/archer.png");
+    this.image = loadImage("./assets/playerArcher.png");
 
     World.add(world, this.body);
 
@@ -29,24 +28,11 @@ class PlayerArcher {
       Matter.Body.setAngle(this.body, angle);
     }
 
-    if (this.body.isStatic) {
-      push();
-      translate(pos.x, pos.y);
-      rotate(angle);
-      fill("#a1887f");
-      rect(0, 0, this.width, this.height);
-      // image(this.image1, 0, 0, this.width, this.height);
-      pop();
-    } else {
-      push();
-      translate(pos.x, pos.y);
-      rotate(angle);
-      rectMode(CENTER);
-      fill("#a1887f");
-      rect(0, 0, this.width, this.height);
-      // imageMode(CENTER);
-      // image(this.image2, 0, 0, this.width, this.height);
-      pop();
-    }
+    push();
+    translate(pos.x, pos.y);
+    rotate(angle);
+    imageMode(CENTER);
+    image(this.image, 0, 0, this.width, this.height);
+    pop();
   }
 }

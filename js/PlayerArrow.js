@@ -26,7 +26,6 @@ class PlayerArrow {
   shoot(archerAngle) {
     this.velocity = p5.Vector.fromAngle(archerAngle + PI / 2);
     this.velocity.mult(25);
-    // console.log(archerAngle, this.velocity);
 
     Matter.Body.setVelocity(this.body, {
       x: this.velocity.x,
@@ -53,7 +52,7 @@ class PlayerArrow {
     translate(pos.x, pos.y);
     rotate(angle);
     imageMode(CENTER);
-    image(this.image, 0, -25, this.width, this.height);
+    image(this.image, 0, 0, this.width, this.height);
     pop();
 
     if (this.body.velocity.x > 0 && this.body.position.x > 400) {
@@ -63,7 +62,7 @@ class PlayerArrow {
 
     for (var i = 0; i < this.trajectory.length; i++) {
       fill("white");
-      ellipse(this.trajectory[i][0], this.trajectory[i][1] - 25, 5, 5);
+      ellipse(this.trajectory[i][0], this.trajectory[i][1], 5, 5);
     }
   }
 }

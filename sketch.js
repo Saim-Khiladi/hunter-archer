@@ -25,9 +25,9 @@ function setup() {
   playerBase = new PlayerBase(300, random(450, height - 300), 180, 150);
   player = new Player(285, playerBase.body.position.y - 153, 50, 180);
   playerArcher = new PlayerArcher(
-    310,
-    playerBase.body.position.y - 150,
-    50,
+    340,
+    playerBase.body.position.y - 180,
+    120,
     120
   );
 
@@ -45,9 +45,9 @@ function setup() {
   );
 
   computerArcher = new ComputerArcher(
-    width - 325,
-    computerBase.body.position.y - 200,
-    50,
+    width - 350,
+    computerBase.body.position.y - 180,
+    120,
     120
   );
   handleComputerArcher();

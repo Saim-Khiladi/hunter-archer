@@ -10,8 +10,7 @@ class ComputerArcher {
     this.height = height;
     this.collapse = false;
 
-    this.image1 = loadImage("./assets/computerArcher.png");
-    this.image2 = loadImage("./assets/archer.png");
+    this.image = loadImage("./assets/computerArcher.png");
 
     World.add(world, this.body);
 
@@ -22,25 +21,11 @@ class ComputerArcher {
     var pos = this.body.position;
     var angle = this.body.angle;
 
-    if (this.body.isStatic) {
-      push();
-      translate(pos.x, pos.y);
-      rotate(angle);
-      fill("#81d4fa");
-      rect(0, -20, this.width, this.height);
-      // image(this.image1, 0, -20, this.width, this.height);
-      pop();
-    } else {
-      push();
-      translate(pos.x, pos.y);
-      rotate(angle);
-      rectMode(CENTER);
-      fill("#81d4fa");
-      rect(0, 0, this.width, this.height);
-
-      // imageMode(CENTER);
-      // image(this.image2, 0, 0, this.width, this.height);
-      pop();
-    }
+    push();
+    translate(pos.x, pos.y);
+    rotate(angle);
+    imageMode(CENTER);
+    image(this.image, 0, -20, this.width, this.height);
+    pop();
   }
 }
