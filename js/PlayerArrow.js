@@ -25,7 +25,9 @@ class PlayerArrow {
 
   shoot(archerAngle) {
     this.velocity = p5.Vector.fromAngle(archerAngle + PI / 2);
-    this.velocity.mult(32);
+    this.velocity.mult(25);
+    // console.log(archerAngle, this.velocity);
+
     Matter.Body.setVelocity(this.body, {
       x: this.velocity.x,
       y: this.velocity.y

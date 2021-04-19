@@ -8,7 +8,7 @@ class Computer {
 
     this.width = width;
     this.height = height;
-    this.image = loadImage("./assets/computer.png");
+    this.image = loadImage("./assets/player.png");
 
     this.life1 = "#91ff35";
     this.life2 = "#91ff35";
@@ -52,11 +52,8 @@ class Computer {
     push();
     translate(pos.x, pos.y);
     rotate(angle);
-    rectMode(CENTER);
-    fill("#2979ff");
-    rect(0, 0, this.width, this.height);
-    // imageMode(CENTER);
-    // image(this.image, 0, 0, this.width, this.height);
+    imageMode(CENTER);
+    image(this.image, 0, 0, this.width, this.height);
     pop();
   }
 }
